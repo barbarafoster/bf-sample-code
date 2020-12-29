@@ -1,0 +1,44 @@
+/*
+Solution to 8 Queens using T-SQL
+
+Can you place 8 queens on a standard (8x8) chessboard so that no two queens threaten each other?
+*/
+
+with OneRow as (
+	select
+		col
+	from
+		(values (1),(2),(3),(4),(5),(6),(7),(8)) t(col)
+)
+select
+	concat('1', translate(r1.col, '12345678', 'abcdefgh')) as queen1,
+	concat('2', translate(r2.col, '12345678', 'abcdefgh')) as queen2,
+	concat('3', translate(r3.col, '12345678', 'abcdefgh')) as queen3,
+	concat('4', translate(r4.col, '12345678', 'abcdefgh')) as queen4,
+	concat('5', translate(r5.col, '12345678', 'abcdefgh')) as queen5,
+	concat('6', translate(r6.col, '12345678', 'abcdefgh')) as queen6,
+	concat('7', translate(r7.col, '12345678', 'abcdefgh')) as queen7,
+	concat('8', translate(r8.col, '12345678', 'abcdefgh')) as queen8
+from
+	OneRow as r1
+	inner join OneRow as r2 on r2.col not in (r1.col, 
+											r1.col-1, 
+											r1.col+1)
+	inner join OneRow as r3 on r3.col not in (r1.col, r2.col, 
+											r1.col-2, r2.col-1, 
+											r1.col+2, r2.col+1)
+	inner join OneRow as r4 on r4.col not in (r1.col, r2.col, r3.col, 
+											r1.col-3, r2.col-2, r3.col-1, 
+											r1.col+3, r2.col+2, r3.col+1)
+	inner join OneRow as r5 on r5.col not in (r1.col, r2.col, r3.col, r4.col, 
+											r1.col-4, r2.col-3, r3.col-2, r4.col-1, 
+											r1.col+4, r2.col+3, r3.col+2, r4.col+1)
+	inner join OneRow as r6 on r6.col not in (r1.col, r2.col, r3.col, r4.col, r5.col, 
+											r1.col-5, r2.col-4, r3.col-3, r4.col-2, r5.col-1, 
+											r1.col+5, r2.col+4, r3.col+3, r4.col+2, r5.col+1)
+	inner join OneRow as r7 on r7.col not in (r1.col, r2.col, r3.col, r4.col, r5.col, r6.col,
+											r1.col-6, r2.col-5, r3.col-4, r4.col-3, r5.col-2, r6.col-1, 
+											r1.col+6, r2.col+5, r3.col+4, r4.col+3, r5.col+2, r6.col+1)
+	inner join OneRow as r8 on r8.col not in (r1.col, r2.col, r3.col, r4.col, r5.col, r6.col, r7.col,
+											r1.col-7, r2.col-6, r3.col-5, r4.col-4, r5.col-3, r6.col-2, r7.col-1, 
+											r1.col+7, r2.col+6, r3.col+5, r4.col+4, r5.col+3, r6.col+2, r7.col+1);
